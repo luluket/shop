@@ -113,7 +113,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
                     holder.name.setText(model.getName());
-                    holder.price.setText(String.valueOf(model.getPrice())+" kn");
+                    holder.price.setText(model.getPrice() +" kn");
                     StorageReference productImageRef = mStorageRef.child("products/" + model.getId() +".jpg");
                     productImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
@@ -129,6 +129,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             intent.putExtra("price", model.getPrice());
                             intent.putExtra("description", model.getDescription());
                             intent.putExtra("path","products/"+ model.getId() +".jpg");
+                            intent.putExtra("id",String.valueOf(model.getId()));
                             startActivity(intent);
                         }
                     });
