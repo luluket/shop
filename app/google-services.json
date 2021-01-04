@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "177157430176",
+    "project_id": "shop-e6e65",
+    "storage_bucket": "shop-e6e65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177157430176:android:9b2ded76f8177c215ce2c5",
+        "android_client_info": {
+          "package_name": "com.luka.shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177157430176-qgph0nulj54vre7645bfaihe3tab6i09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDad7e5jLEtk_F3l4QbLZMhQYXB_b038JM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177157430176-qgph0nulj54vre7645bfaihe3tab6i09.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
