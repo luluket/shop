@@ -11,12 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.luka.shop.model.Product;
@@ -41,6 +47,8 @@ public class CartActivity extends AppCompatActivity {
         layout=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         cartItems.setLayoutManager(layout);
 
+        db=FirebaseFirestore.getInstance();
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
         query=FirebaseFirestore.getInstance().collection("cart");
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query,Product.class).build();
@@ -49,6 +57,13 @@ public class CartActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull CartProductHolder holder, int position, @NonNull Product model) {
                 holder.name.setText(model.getName());
                 holder.price.setText(model.getPrice() +" kn");
+                holder.close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DocumentReference mRef = db.collection("cart").document(String.valueOf(model.getId()));
+                        mRef.delete();
+                    }
+                });
                 StorageReference productImageRef = mStorageRef.child("products/" + model.getId() +".jpg");
                 productImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
