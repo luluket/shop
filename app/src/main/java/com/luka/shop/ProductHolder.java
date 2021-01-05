@@ -1,18 +1,12 @@
 package com.luka.shop;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.picasso.Picasso;
-
-import java.text.BreakIterator;
 
 public class ProductHolder extends RecyclerView.ViewHolder {
     TextView price;

@@ -31,7 +31,7 @@ import com.squareup.picasso.Picasso;
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView banner;
-    ImageView profileImg;
+    ImageView profileImg,cart;
 
     FirebaseUser user;
     FirebaseAuth mAuth;
@@ -55,6 +55,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         banner=findViewById(R.id.banner);
         profileImg=findViewById(R.id.profileImg);
         profileImg.setOnClickListener(this);
+
+        cart=findViewById(R.id.cart);
+        cart.setOnClickListener(this);
 
         layout=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         categories=findViewById(R.id.categories);
@@ -153,6 +156,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
             case R.id.profileImg:
                 startActivity(new Intent(getApplicationContext(),ProfileActivity.class));
+                break;
+            case R.id.cart:
+                startActivity(new Intent(getApplicationContext(),CartActivity.class));
+                break;
         }
     }
 

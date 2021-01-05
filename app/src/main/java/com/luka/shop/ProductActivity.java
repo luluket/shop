@@ -20,7 +20,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.luka.shop.model.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class ProductActivity extends AppCompatActivity {
     ImageView image;
     StorageReference mStorageRef;
     Button addToCart;
-    String productId;
+    String productId,path;
     int cost;
     FirebaseFirestore db;
 
@@ -46,13 +45,14 @@ public class ProductActivity extends AppCompatActivity {
         description=findViewById(R.id.description);
         productId=getIntent().getStringExtra("id");
         cost=getIntent().getIntExtra("price",0);
+        path=getIntent().getStringExtra("path");
 
         name.setText(getIntent().getStringExtra("name"));
         price.setText(cost + " kn");
         description.setText(getIntent().getStringExtra("description"));
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference productImageRef = mStorageRef.child(productId);
+        StorageReference productImageRef = mStorageRef.child(path);
         productImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
