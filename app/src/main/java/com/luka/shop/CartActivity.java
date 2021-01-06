@@ -10,13 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.luka.shop.model.Product;
@@ -30,6 +35,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     StorageReference mStorageRef;
     Button btnContinue, btnCheckout;
     String userId;
+    TextView emptyCartNote, yourCartNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,19 +47,25 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         LinearLayoutManager cartLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         cartItems.setLayoutManager(cartLayout);
 
-        btnContinue=findViewById(R.id.btnContinue);
+        btnContinue = findViewById(R.id.btnContinue);
         btnContinue.setOnClickListener(this);
 
-        btnCheckout=findViewById(R.id.btnCheckout);
+        btnCheckout = findViewById(R.id.btnCheckout);
         btnCheckout.setOnClickListener(this);
+
+        yourCartNote = findViewById(R.id.yourCartNote);
+        emptyCartNote = findViewById(R.id.emptyCartNote);
 
         db = FirebaseFirestore.getInstance();
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        userId= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+
         DisplayCartProducts();
 
     }
+
 
     private void DisplayCartProducts() {
         Query query = db.collection("cart").document(userId).collection("products");
@@ -79,6 +91,20 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
         cartItems.setAdapter(cartProductsAdapter);
+
+        //is cart empty
+        db.collection("cart").document(userId).collection("products").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot doc = task.getResult();
+                if (doc.isEmpty()) {
+                    btnCheckout.setVisibility(View.GONE);
+                    btnContinue.setVisibility(View.GONE);
+                    emptyCartNote.setVisibility(View.VISIBLE);
+                    yourCartNote.setVisibility(View.INVISIBLE);
+
+                }
+            }
+        });
     }
 
     @Override
@@ -95,6 +121,8 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.btnCheckout:
+        }
     }
 }
