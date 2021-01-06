@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CartProductHolder extends RecyclerView.ViewHolder {
     TextView price;
     TextView name;
-    ImageView img,close;
+    ImageView img, close;
     ConstraintLayout container;
 
     public CartProductHolder(@NonNull View itemView) {
         super(itemView);
-        container=itemView.findViewById(R.id.cart_container);
-        name=itemView.findViewById(R.id.cart_product_name);
-        price=itemView.findViewById(R.id.cart_product_price);
-        img=itemView.findViewById(R.id.cart_product_img);
-        close=itemView.findViewById(R.id.close);
+        container = itemView.findViewById(R.id.cart_container);
+        name = itemView.findViewById(R.id.cart_product_name);
+        price = itemView.findViewById(R.id.cart_product_price);
+        img = itemView.findViewById(R.id.cart_product_img);
+        close = itemView.findViewById(R.id.close);
     }
 }

@@ -30,7 +30,7 @@
             android:textStyle="bold" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImg"
+            android:id="@+id/miniprofileImg"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginLeft="80dp"
