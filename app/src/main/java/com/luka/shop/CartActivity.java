@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -28,6 +29,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     FirestoreRecyclerAdapter cartProductsAdapter;
     StorageReference mStorageRef;
     Button btnContinue, btnCheckout;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +50,21 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         db = FirebaseFirestore.getInstance();
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
+        userId= FirebaseAuth.getInstance().getCurrentUser().getUid();
         DisplayCartProducts();
 
     }
 
     private void DisplayCartProducts() {
-        Query query = db.collection("cart");
-        FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
-        cartProductsAdapter = new FirestoreRecyclerAdapter<Product, CartProductHolder>(options) {
+        Query query = db.collection("cart").document(userId).collection("products");
+        FirestoreRecyclerOptions<Product> setCartProducts = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
+        cartProductsAdapter = new FirestoreRecyclerAdapter<Product, CartProductHolder>(setCartProducts) {
             @Override
             protected void onBindViewHolder(@NonNull CartProductHolder holder, int position, @NonNull Product model) {
                 holder.name.setText(model.getName());
                 holder.price.setText(model.getPrice() + " kn");
                 holder.close.setOnClickListener(v -> {
-                    DocumentReference mRef = db.collection("cart").document(String.valueOf(model.getId()));
+                    DocumentReference mRef = db.collection("cart").document(userId).collection("products").document(String.valueOf(model.getId()));
                     mRef.delete();
                 });
                 StorageReference productImageRef = mStorageRef.child("products/" + model.getId() + ".jpg");

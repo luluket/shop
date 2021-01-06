@@ -9,9 +9,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -25,6 +29,7 @@ public class ProductActivity extends AppCompatActivity {
     ImageView image;
     Button addToCart;
     String productId;
+    String userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,13 +55,16 @@ public class ProductActivity extends AppCompatActivity {
         StorageReference productImageRef = mStorageRef.child(path);
         productImageRef.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(image));
 
+        //get authenticated user id
+        userId=FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         displayProduct();
 
     }
 
     private void displayProduct() {
         // check if product exists in cart and update button if true, if it doesn't exist in cart, allow clicking on button and adding to cart
-        DocumentReference mRef = FirebaseFirestore.getInstance().collection("cart").document(productId); // where to push data
+        DocumentReference mRef = FirebaseFirestore.getInstance().collection("cart").document(userId).collection("products").document(productId); // cart/userId/products/productId
         mRef.get().addOnCompleteListener(task -> {
             DocumentSnapshot document = task.getResult();
             if (task.isSuccessful()) {
@@ -73,6 +81,7 @@ public class ProductActivity extends AppCompatActivity {
                             product.put("description", description.getText());
                             mRef.set(product).addOnSuccessListener(aVoid -> Toast.makeText(ProductActivity.this, name.getText() + " added to cart", Toast.LENGTH_SHORT).show());
                         });
+
                     });
                 }
             }

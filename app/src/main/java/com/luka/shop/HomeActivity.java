@@ -94,9 +94,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void displayProducts() {
-        Query q = db.collection("products");
-        FirestoreRecyclerOptions<Product> o = new FirestoreRecyclerOptions.Builder<Product>().setQuery(q, Product.class).build();
-        productAdapter = new FirestoreRecyclerAdapter<Product, ProductHolder>(o) {
+        Query query = db.collection("products");
+        FirestoreRecyclerOptions<Product> setProducts = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
+        productAdapter = new FirestoreRecyclerAdapter<Product, ProductHolder>(setProducts) {
             @Override
             protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
                 holder.name.setText(model.getName());
