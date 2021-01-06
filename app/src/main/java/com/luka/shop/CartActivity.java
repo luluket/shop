@@ -19,13 +19,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.internal.$Gson$Preconditions;
 import com.luka.shop.model.Product;
 import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CartActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -123,6 +131,40 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnCheckout:
+                completeOrder();
         }
+    }
+
+    private void completeOrder() {
+
+        // using date as order id
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        // fetch cart products and order's total cost
+        db.collection("cart").document(userId).collection("products").get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                int totalCost=0;
+                for (QueryDocumentSnapshot document : task.getResult()){
+
+                    Map<String,Object> data = new HashMap<>();
+                    data.put("id",document.getData().get("id"));
+                    data.put("name",document.getData().get("name"));
+                    data.put("price",document.getData().get("price"));
+                    totalCost += Integer.parseInt(document.getData().get("price").toString());
+                    db.collection("orders").document(userId).collection(formatter.format(date)).document(document.getId()).set(data);
+                }
+                Map<String,Object> cost = new HashMap<>();
+                cost.put("total cost",totalCost);
+                db.collection("orders").document(userId).collection(formatter.format(date)).document("total cost").set(cost);
+            }
+        });
+        db.collection("cart").document(userId).collection("products").get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                for(QueryDocumentSnapshot document : task.getResult()){
+                    document.getReference().delete();
+                }
+            }
+        });
     }
 }

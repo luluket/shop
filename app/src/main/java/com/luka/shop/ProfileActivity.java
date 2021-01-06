@@ -1,5 +1,6 @@
 package com.luka.shop;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,8 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -43,7 +47,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         TextView email = findViewById(R.id.email);
         TextView age = findViewById(R.id.age);
         profileImg = findViewById(R.id.profileImg);
+
         changeProfileImg = findViewById(R.id.changeProfileImg);
+        changeProfileImg.setOnClickListener(this);
 
         logout = findViewById(R.id.logout);
         logout.setOnClickListener(this);
@@ -64,7 +70,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             email.setText(value.getString("email"));
         });
 
-        changeProfileImg.setOnClickListener(this);
     }
 
     @Override
