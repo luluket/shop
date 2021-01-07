@@ -2,6 +2,7 @@ package com.luka.shop;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -99,6 +100,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         productAdapter = new FirestoreRecyclerAdapter<Product, ProductHolder>(setProducts) {
             @Override
             protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
+                if(position%2==0){
+                    holder.container.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.even));
+                }else{
+                    holder.container.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.odd));
+                }
                 holder.name.setText(model.getName());
                 holder.price.setText(model.getPrice() + " kn");
                 StorageReference productImageRef = mStorageRef.child("products/" + model.getId() + ".jpg");

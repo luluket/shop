@@ -5,17 +5,16 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#60A59E"
-    android:backgroundTint="#86D1CA"
+    android:background="#00BCD4"
     android:backgroundTintMode="multiply"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="30dp">
 
     <ImageView
         android:id="@+id/product_img"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
         android:background="#FFFFFF" />
 
     <TextView
