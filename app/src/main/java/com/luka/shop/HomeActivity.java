@@ -1,16 +1,12 @@
 package com.luka.shop;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -21,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.luka.shop.adapter.CategoryAdapter;
+import com.luka.shop.adapter.ProductAdapter;
 import com.luka.shop.model.Category;
 import com.luka.shop.model.Product;
 import com.squareup.picasso.Picasso;
@@ -51,14 +49,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             ImageView cart = findViewById(R.id.cart);
             cart.setOnClickListener(this);
 
-            categories = (RecyclerView) findViewById(R.id.categories);
-            LinearLayoutManager categoriesLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            categories.setLayoutManager(categoriesLayout);
-
-            products = (RecyclerView) findViewById(R.id.products);
-            LinearLayoutManager productsLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-            products.setLayoutManager(productsLayout);
-
             // load profile image for authenticated user
             mStorageRef = FirebaseStorage.getInstance().getReference();
             String userId = user.getUid();
@@ -77,57 +67,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void displayCategories() {
         Query query = db.collection("category");
-        FirestoreRecyclerOptions<Category> setCategories = new FirestoreRecyclerOptions.Builder<Category>().setQuery(query, Category.class).build();
-        categoryAdapter = new FirestoreRecyclerAdapter<Category, CategoryHolder>(setCategories) {
-            @Override
-            protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull Category model) {
-                holder.name.setText(model.getName());
-            }
-
-            @NonNull
-            @Override
-            public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category, parent, false);
-                return new CategoryHolder(view);
-            }
-        };
+        FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<Category>().setQuery(query, Category.class).build();
+        categoryAdapter = new CategoryAdapter(options, getApplicationContext());
+        categories = (RecyclerView) findViewById(R.id.categories);
+        LinearLayoutManager categoriesLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        categories.setLayoutManager(categoriesLayout);
         categories.setAdapter(categoryAdapter);
     }
 
     private void displayProducts() {
         Query query = db.collection("products");
-        FirestoreRecyclerOptions<Product> setProducts = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
-        productAdapter = new FirestoreRecyclerAdapter<Product, ProductHolder>(setProducts) {
-            @Override
-            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
-                if(position%2==0){
-                    holder.container.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.even));
-                }else{
-                    holder.container.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.odd));
-                }
-                holder.name.setText(model.getName());
-                holder.price.setText(model.getPrice() + " kn");
-                StorageReference productImageRef = mStorageRef.child("products/" + model.getId() + ".jpg");
-                productImageRef.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(holder.img));
-                holder.container.setOnClickListener(v -> {
-                    Intent intent = new Intent(getApplicationContext(), ProductActivity.class);
-                    intent.putExtra("name", model.getName());
-                    intent.putExtra("price", model.getPrice());
-                    intent.putExtra("description", model.getDescription());
-                    intent.putExtra("path", "products/" + model.getId() + ".jpg");
-                    intent.putExtra("id", String.valueOf(model.getId()));
-                    startActivity(intent);
-                });
-
-            }
-
-            @NonNull
-            @Override
-            public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product, parent, false);
-                return new ProductHolder(view);
-            }
-        };
+        FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
+        productAdapter = new ProductAdapter(options, getApplicationContext(), mStorageRef);
+        products = (RecyclerView) findViewById(R.id.products);
+        LinearLayoutManager productsLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        products.setLayoutManager(productsLayout);
         products.setAdapter(productAdapter);
     }
 

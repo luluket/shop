@@ -1,4 +1,4 @@
-package com.luka.shop;
+package com.luka.shop.holder;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -8,12 +8,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProductHolder extends RecyclerView.ViewHolder {
+import com.luka.shop.R;
 
-    TextView price;
-    TextView name;
-    ImageView img;
-    LinearLayout container;
+public class ProductHolder extends RecyclerView.ViewHolder {
+    public TextView price;
+    public TextView name;
+    public ImageView img;
+    public LinearLayout container;
 
     public ProductHolder(@NonNull View itemView) {
         super(itemView);

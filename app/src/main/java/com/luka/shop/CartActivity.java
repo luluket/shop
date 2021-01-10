@@ -1,34 +1,23 @@
 package com.luka.shop;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.gson.internal.$Gson$Preconditions;
+import com.luka.shop.adapter.CartProductsAdapter;
 import com.luka.shop.model.Product;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,7 +29,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView cartItems;
     FirebaseFirestore db;
     FirestoreRecyclerAdapter cartProductsAdapter;
-    StorageReference mStorageRef;
     Button btnContinue, btnCheckout;
     String userId;
     TextView emptyCartNote, yourCartNote;
@@ -51,10 +39,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_cart);
 
         // instantiate widgets
-        cartItems = (RecyclerView) findViewById(R.id.cartItems);
-        LinearLayoutManager cartLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        cartItems.setLayoutManager(cartLayout);
-
         btnContinue = findViewById(R.id.btnContinue);
         btnContinue.setOnClickListener(this);
 
@@ -66,9 +50,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
         db = FirebaseFirestore.getInstance();
 
-        mStorageRef = FirebaseStorage.getInstance().getReference();
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
 
         DisplayCartProducts();
 
@@ -77,27 +59,11 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
     private void DisplayCartProducts() {
         Query query = db.collection("cart").document(userId).collection("products");
-        FirestoreRecyclerOptions<Product> setCartProducts = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
-        cartProductsAdapter = new FirestoreRecyclerAdapter<Product, CartProductHolder>(setCartProducts) {
-            @Override
-            protected void onBindViewHolder(@NonNull CartProductHolder holder, int position, @NonNull Product model) {
-                holder.name.setText(model.getName());
-                holder.price.setText(model.getPrice() + " kn");
-                holder.close.setOnClickListener(v -> {
-                    DocumentReference mRef = db.collection("cart").document(userId).collection("products").document(String.valueOf(model.getId()));
-                    mRef.delete();
-                });
-                StorageReference productImageRef = mStorageRef.child("products/" + model.getId() + ".jpg");
-                productImageRef.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(holder.img));
-            }
-
-            @NonNull
-            @Override
-            public CartProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_product, parent, false);
-                return new CartProductHolder(view);
-            }
-        };
+        FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
+        cartProductsAdapter = new CartProductsAdapter(options, getApplicationContext(), userId);
+        cartItems = (RecyclerView) findViewById(R.id.cartItems);
+        LinearLayoutManager cartLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        cartItems.setLayoutManager(cartLayout);
         cartItems.setAdapter(cartProductsAdapter);
 
         //is cart empty
@@ -143,25 +109,25 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
         // fetch cart products and order's total cost
         db.collection("cart").document(userId).collection("products").get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                int totalCost=0;
-                for (QueryDocumentSnapshot document : task.getResult()){
+            if (task.isSuccessful()) {
+                int totalCost = 0;
+                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                    Map<String,Object> data = new HashMap<>();
-                    data.put("id",document.getData().get("id"));
-                    data.put("name",document.getData().get("name"));
-                    data.put("price",document.getData().get("price"));
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("id", document.getData().get("id"));
+                    data.put("name", document.getData().get("name"));
+                    data.put("price", document.getData().get("price"));
                     totalCost += Integer.parseInt(document.getData().get("price").toString());
                     db.collection("orders").document(userId).collection(formatter.format(date)).document(document.getId()).set(data);
                 }
-                Map<String,Object> cost = new HashMap<>();
-                cost.put("total cost",totalCost);
+                Map<String, Object> cost = new HashMap<>();
+                cost.put("total cost", totalCost);
                 db.collection("orders").document(userId).collection(formatter.format(date)).document("total cost").set(cost);
             }
         });
         db.collection("cart").document(userId).collection("products").get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                for(QueryDocumentSnapshot document : task.getResult()){
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
                     document.getReference().delete();
                 }
             }

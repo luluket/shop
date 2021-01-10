@@ -1,4 +1,4 @@
-package com.luka.shop;
+package com.luka.shop.holder;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -8,11 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.luka.shop.R;
+
 public class CartProductHolder extends RecyclerView.ViewHolder {
-    TextView price;
-    TextView name;
-    ImageView img, close;
-    ConstraintLayout container;
+    public TextView price;
+    public TextView name;
+    public ImageView img, close;
+    public ConstraintLayout container;
 
     public CartProductHolder(@NonNull View itemView) {
         super(itemView);
