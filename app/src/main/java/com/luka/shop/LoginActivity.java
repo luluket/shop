@@ -45,7 +45,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.register:
-                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
             case R.id.signIn:
                 userLogin();
@@ -83,8 +85,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // redirect to home page
-                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                // redirect to home page, and finish login activity
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             } else {
                 Toast.makeText(LoginActivity.this, "Failed to login! Please check your credentials", Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);

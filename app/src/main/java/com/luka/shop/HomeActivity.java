@@ -54,6 +54,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             ImageView cart = findViewById(R.id.cart);
             cart.setOnClickListener(this);
 
+
             // load profile image for authenticated user
             mStorageRef = FirebaseStorage.getInstance().getReference();
             String userId = user.getUid();
@@ -65,6 +66,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             displayCategories();
             displayProducts();
+
         } else {
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
         }

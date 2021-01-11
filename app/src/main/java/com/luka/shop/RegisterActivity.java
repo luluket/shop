@@ -12,11 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +64,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 registerUser();
                 break;
             case R.id.signIn:
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
         }
     }
@@ -125,7 +125,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 user.put("email", email);
                 mRef.set(user).addOnSuccessListener(aVoid -> Toast.makeText(RegisterActivity.this, "user profile is created for " + userId, Toast.LENGTH_SHORT).show());
                 progressBar.setVisibility(View.GONE);
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> startActivity(new Intent(RegisterActivity.this, ProfileActivity.class)));
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> {
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                });
             } else {
                 Toast.makeText(RegisterActivity.this, "Failed to register! Try again", Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);

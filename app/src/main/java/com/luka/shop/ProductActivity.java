@@ -56,7 +56,7 @@ public class ProductActivity extends AppCompatActivity {
         productImageRef.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(image));
 
         //get authenticated user id
-        userId=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         displayProduct();
 

@@ -75,7 +75,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                     btnContinue.setVisibility(View.GONE);
                     emptyCartNote.setVisibility(View.VISIBLE);
                     yourCartNote.setVisibility(View.INVISIBLE);
-
                 }
             }
         });
@@ -98,6 +97,11 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btnCheckout:
                 completeOrder();
+                finish();
+                break;
+            case R.id.btnContinue:
+                finish();
+                break;
         }
     }
 

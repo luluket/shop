@@ -1,6 +1,5 @@
 package com.luka.shop;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,11 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -76,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.banner:
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                finish();
                 break;
             case R.id.changeProfileImg:
                 changeImage();
@@ -88,8 +84,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void logout() {
-        mAuth.signOut();
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        mAuth.signOut(); // firebase auth sign out
+
+        // clear previous activities
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private void changeImage() {
