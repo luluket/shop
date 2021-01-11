@@ -1,10 +1,14 @@
 package com.luka.shop;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +26,7 @@ import com.luka.shop.adapter.ProductAdapter;
 import com.luka.shop.model.Category;
 import com.luka.shop.model.Product;
 import com.squareup.picasso.Picasso;
+
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,6 +78,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         LinearLayoutManager categoriesLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         categories.setLayoutManager(categoriesLayout);
         categories.setAdapter(categoryAdapter);
+
+        // Listen for user's filtering
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("filter-categories")); // get category id on click
     }
 
     private void displayProducts() {
@@ -84,6 +92,27 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         products.setLayoutManager(productsLayout);
         products.setAdapter(productAdapter);
     }
+
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String id = intent.getStringExtra("id");
+            String category = intent.getStringExtra("category");
+
+            if (category.equals("all")) {
+                Query query = db.collection("products").whereEqualTo("all", db.document("category/" + id));
+                FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
+                productAdapter.updateOptions(options);
+            } else {
+                Query query = db.collection("products").whereEqualTo("category_id", db.document("category/" + id));
+                FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
+                productAdapter.updateOptions(options);
+            }
+
+        }
+
+    };
+
 
     @Override
     public void onClick(View v) {
