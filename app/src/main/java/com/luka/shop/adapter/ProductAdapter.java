@@ -60,7 +60,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductHol
     @NonNull
     @Override
     public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_recycler_view_item, parent, false);
         return new ProductHolder(view);
     }
 }

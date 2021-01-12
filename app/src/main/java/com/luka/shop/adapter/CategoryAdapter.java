@@ -52,7 +52,7 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
     @NonNull
     @Override
     public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_recycler_view_item, parent, false);
         return new CategoryHolder(view);
     }
 
