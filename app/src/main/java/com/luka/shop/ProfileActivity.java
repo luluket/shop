@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -86,10 +87,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void logout() {
         mAuth.signOut(); // firebase auth sign out
 
-        // clear previous activities
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // clears all activity previous to ProfileActivity
+        finish(); // clears ProfileActivity
         startActivity(intent);
+
     }
 
     private void changeImage() {

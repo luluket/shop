@@ -68,7 +68,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             displayProducts();
 
         } else {
-            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            finish();
+            startActivity(intent);
         }
     }
 
