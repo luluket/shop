@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,13 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -37,6 +34,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Instantiate widgets
         banner = findViewById(R.id.banner);
         banner.setOnClickListener(this);
 
@@ -54,19 +52,19 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mAuth = FirebaseAuth.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+        String userId = mAuth.getCurrentUser().getUid();
 
+        // load authenticated user profile image
         StorageReference profileRef = mStorageRef.child("users/" + userId + "/profile");
         profileRef.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(profileImg));
 
-        DocumentReference mRef = FirebaseFirestore.getInstance().collection("users").document(userId);
-        mRef.addSnapshotListener(this, (value, error) -> {
+        // set authenticated user data fields
+        FirebaseFirestore.getInstance().collection("users").document(userId).addSnapshotListener((value, error) -> {
             assert value != null;
             age.setText(value.getString("age"));
             fullName.setText(value.getString("fullName"));
             email.setText(value.getString("email"));
         });
-
     }
 
     @Override

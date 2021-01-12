@@ -54,7 +54,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             ImageView cart = findViewById(R.id.cart);
             cart.setOnClickListener(this);
 
-
             // load profile image for authenticated user
             mStorageRef = FirebaseStorage.getInstance().getReference();
             String userId = user.getUid();
@@ -68,6 +67,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             displayProducts();
 
         } else {
+            // if user not authenticated, redirect to login page and remove this activity from stack
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             finish();
             startActivity(intent);
@@ -83,8 +83,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         categories.setLayoutManager(categoriesLayout);
         categories.setAdapter(categoryAdapter);
 
-        // Listen for user's filtering
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("filter-categories")); // get category id on click
+        // Listen for category filter
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("filter-categories")); // get category id,name on click
     }
 
     private void displayProducts() {
@@ -122,10 +122,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.miniprofileImg:
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)); // redirect, but remain on stack
                 break;
             case R.id.cart:
-                startActivity(new Intent(getApplicationContext(), CartActivity.class));
+                startActivity(new Intent(getApplicationContext(), CartActivity.class)); // redirect, but remain on stack
                 break;
         }
     }
@@ -133,22 +133,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        if (user == null) {
-            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-        } else {
-            categoryAdapter.startListening();
-            productAdapter.startListening();
-        }
+
+        categoryAdapter.startListening();
+        productAdapter.startListening();
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (user == null) {
-            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-        } else {
-            categoryAdapter.stopListening();
-            productAdapter.stopListening();
-        }
+
+        categoryAdapter.stopListening();
+        productAdapter.stopListening();
+
     }
 }

@@ -36,9 +36,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         db = FirebaseFirestore.getInstance();
 
         // instantiate widgets
-        TextView banner = findViewById(R.id.banner);
-        banner.setOnClickListener(this);
-
         Button registerUser = findViewById(R.id.registerUser);
         registerUser.setOnClickListener(this);
 
@@ -57,9 +54,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.banner:
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                break;
             case R.id.registerUser:
                 registerUser();
                 break;
@@ -128,6 +122,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> {
                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    finish();
                     startActivity(intent);
                 });
             } else {
