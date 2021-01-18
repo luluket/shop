@@ -86,8 +86,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mAuth.signOut(); // firebase auth sign out
 
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // clears all activity previous to ProfileActivity
-        finish(); // clears ProfileActivity
+
+        // clear activity stack and running activity
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        finish();
+
+        // redirect to login
         startActivity(intent);
 
     }
