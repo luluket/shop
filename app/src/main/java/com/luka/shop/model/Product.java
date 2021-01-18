@@ -1,24 +1,11 @@
 package com.luka.shop.model;
 
 import java.lang.ref.Reference;
-import java.sql.Ref;
 
 public class Product {
     private String mName, mDescription;
     private int mPrice, id;
     private Reference<Category> categoryReference;
-
-    public Product() {
-
-    }
-
-    public Product(String name, String description, int price, Reference<Category> categoryReference) {
-
-        this.mName = name;
-        this.mDescription = description;
-        this.mPrice = price;
-        this.categoryReference = categoryReference;
-    }
 
     public int getId() {
         return id;

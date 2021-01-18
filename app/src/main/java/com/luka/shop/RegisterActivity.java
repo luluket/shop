@@ -120,6 +120,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 mRef.set(user).addOnSuccessListener(aVoid -> Toast.makeText(RegisterActivity.this, "user profile is created for " + userId, Toast.LENGTH_SHORT).show());
                 progressBar.setVisibility(View.GONE);
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> {
+                    // when user registered, clear activity stack and start HomeActivity
                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     finish();

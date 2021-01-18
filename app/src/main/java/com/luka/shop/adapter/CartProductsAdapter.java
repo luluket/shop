@@ -36,6 +36,8 @@ public class CartProductsAdapter extends FirestoreRecyclerAdapter<Product, CartP
 
     @Override
     protected void onBindViewHolder(@NonNull CartProductHolder holder, int position, @NonNull Product model) {
+        // Bind the Product object to the CartProductHolder
+
         holder.name.setText(model.getName());
         holder.price.setText(model.getPrice() + " kn");
         holder.close.setOnClickListener(v -> {
@@ -49,6 +51,8 @@ public class CartProductsAdapter extends FirestoreRecyclerAdapter<Product, CartP
     @NonNull
     @Override
     public CartProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Create a new instance of the ViewHolder, in this case we are using a custom
+        // layout called R.layout.cart_product_recycler_view_item for each item
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_product_recycler_view_item, parent, false);
         return new CartProductHolder(view);
     }

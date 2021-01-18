@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.luka.shop.R;
 
 public class ProductHolder extends RecyclerView.ViewHolder {
+    // ViewHolder subclass displays each item
     public TextView price;
     public TextView name;
     public ImageView img;

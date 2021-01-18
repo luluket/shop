@@ -58,12 +58,21 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void DisplayCartProducts() {
+        // fetch every document in products collection
         Query query = db.collection("cart").document(userId).collection("products");
+
+        // Configure recycler adapter options:
+        // * query is the Query object defined above
+        // * Product.class instructs adapter to convert each DocumentSnapshot to a Product object
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
+
+        // create adapter object and set vertical layout manager
         cartProductsAdapter = new CartProductsAdapter(options, getApplicationContext(), userId);
         cartItems = (RecyclerView) findViewById(R.id.cartItems);
         LinearLayoutManager cartLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         cartItems.setLayoutManager(cartLayout);
+
+        // attach adapter to RecyclerView widget
         cartItems.setAdapter(cartProductsAdapter);
 
         //is cart empty
@@ -71,6 +80,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             if (task.isSuccessful()) {
                 QuerySnapshot doc = task.getResult();
                 if (doc.isEmpty()) {
+                    // no products in cart, remove buttons and display empty cart note
                     btnCheckout.setVisibility(View.GONE);
                     btnContinue.setVisibility(View.GONE);
                     emptyCartNote.setVisibility(View.VISIBLE);

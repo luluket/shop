@@ -34,6 +34,8 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
 
     @Override
     protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull Category model) {
+        // bind Category object to CategoryHolder
+
         holder.name.setText(model.getName());
         // fetch category id and name and pass to HomeActivity
         holder.name.setOnClickListener(v -> FirebaseFirestore.getInstance().collection("category").whereEqualTo("name", model.getName()).get().addOnCompleteListener(task -> {
@@ -52,6 +54,8 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
     @NonNull
     @Override
     public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Create a new instance of the ViewHolder, in this case we are using a custom
+        // layout called R.layout.category_recycler_view_item for each item
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_recycler_view_item, parent, false);
         return new CategoryHolder(view);
     }

@@ -75,12 +75,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void displayCategories() {
+        // fetch every document in category collection
         Query query = db.collection("category");
+
+        // Configure recycler adapter options:
+        // * query is the Query object defined above
+        // * Category.class instructs adapter to convert each DocumentSnapshot to a Category object
         FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<Category>().setQuery(query, Category.class).build();
+
+        // create adapter object and set horizontal layout manager
         categoryAdapter = new CategoryAdapter(options, getApplicationContext());
         categories = (RecyclerView) findViewById(R.id.categories);
         LinearLayoutManager categoriesLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         categories.setLayoutManager(categoriesLayout);
+
+        // attach the adapter to RecyclerView widget
         categories.setAdapter(categoryAdapter);
 
         // Listen for category filter
@@ -88,12 +97,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void displayProducts() {
+        // fetch every document in products collection
         Query query = db.collection("products");
+
+        // Configure recycler adapter options:
+        // * query is the Query object defined above
+        // * Product.class instructs adapter to convert each DocumentSnapshot to a Product object
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product.class).build();
+
+        // create adapter object and set vertical layout manager
         productAdapter = new ProductAdapter(options, getApplicationContext(), mStorageRef);
         products = (RecyclerView) findViewById(R.id.products);
         LinearLayoutManager productsLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         products.setLayoutManager(productsLayout);
+
+        // attach the adapter to RecyclerView widget
         products.setAdapter(productAdapter);
     }
 
@@ -134,6 +152,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
 
+        // FirestoreRecyclerAdapter uses snapshot listener to the Firestore query
+        // begin listening for data
         categoryAdapter.startListening();
         productAdapter.startListening();
 
@@ -143,6 +163,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
 
+        // removes snapshot listener and all data in the adapter
         categoryAdapter.stopListening();
         productAdapter.stopListening();
 

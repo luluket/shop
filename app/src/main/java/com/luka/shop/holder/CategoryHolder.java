@@ -10,6 +10,7 @@ import com.luka.shop.R;
 
 
 public class CategoryHolder extends RecyclerView.ViewHolder {
+    // ViewHolder subclass displays each item
     public TextView name;
 
     public CategoryHolder(@NonNull View itemView) {

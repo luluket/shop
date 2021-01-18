@@ -36,6 +36,8 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductHol
 
     @Override
     protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
+        // Bind the Product object to the ProductHolder
+
         if (position % 2 == 0) {
             holder.container.setBackgroundColor(ContextCompat.getColor(mContext, R.color.even));
         } else {
@@ -60,6 +62,8 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductHol
     @NonNull
     @Override
     public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Create a new instance of the ViewHolder, in this case we are using a custom
+        // layout called R.layout.product_recycler_view_item for each item
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_recycler_view_item, parent, false);
         return new ProductHolder(view);
     }

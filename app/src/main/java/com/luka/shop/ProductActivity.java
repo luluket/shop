@@ -69,7 +69,7 @@ public class ProductActivity extends AppCompatActivity {
                     addToCart.setText("In cart");
                 } else {
                     addToCart.setOnClickListener(v -> {
-                        // get the reference and check if document already exist, if it doesn't, add to cart
+                        // it doesn't exists, proceed to add to cart
                         mRef.get().addOnCompleteListener(task1 -> {
                             Map<String, Object> product = new HashMap<>();
                             product.put("id", Integer.parseInt(productId));
@@ -78,7 +78,6 @@ public class ProductActivity extends AppCompatActivity {
                             product.put("description", description.getText());
                             mRef.set(product).addOnSuccessListener(aVoid -> Toast.makeText(ProductActivity.this, name.getText() + " added to cart", Toast.LENGTH_SHORT).show());
                         });
-
                     });
                 }
             }
